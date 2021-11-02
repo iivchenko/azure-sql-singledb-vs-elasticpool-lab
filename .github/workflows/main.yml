@@ -1,4 +1,5 @@
-name: Build and Deply
+on: workflow_dispatch 
+name: Build and Deploy
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
