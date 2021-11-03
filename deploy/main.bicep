@@ -50,13 +50,16 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2020-06-01' = {
 resource appService 'Microsoft.Web/sites@2020-06-01' = [for i in range(0, dbCount): {
   name: '${prefix}-single-db-app-${i}'
   location: location
+  dependsOn: [
+    sqlServerDatabase
+  ]
   properties: {
     serverFarmId: appServicePlan.id
     siteConfig: {
       linuxFxVersion: 'DOTNETCORE|5.0'
       appSettings: [
         {
-          name: 'ConnectionStrings:DefaultConnection'
+          name: 'ConnectionStrings__DefaultConnection'
           value: 'Server=${prefix}-single-db-server.database.windows.net,1433;Initial Catalog=${prefix}-single-db-${i};Persist Security Info=False;User ID=${sqlUser};Password=${sqlPass};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;'
         }
       ]
