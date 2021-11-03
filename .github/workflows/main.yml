@@ -1,3 +1,4 @@
+name: Build and Deploy
 on:
   workflow_dispatch:
     inputs:
@@ -16,7 +17,7 @@ on:
       db-pass: 
         description: 'The sql server user password'
         required: true
-        default: $ {{ secrets.SQL_USER_PASS }}
+        default: '123asdQ!'
       arm-group:
         description: 'Name of the destination Azure resource group'
         required: true
