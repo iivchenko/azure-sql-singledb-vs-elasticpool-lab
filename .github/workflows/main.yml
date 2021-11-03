@@ -17,19 +17,23 @@ on:
         description: 'The sql server user password'
         required: true
         default: $ {{ secrets.SQL_USER_PASS }}
+      arm-group:
+        description: 'Name of the destination Azure resource group'
+        required: true
+        default: 'iivc-single-db'
 jobs:
-  build-and-deploy:
+  deploy-arm:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@main
     - uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
-    - name: deploy
+    - name: deploy-arm
       uses: azure/arm-deploy@v1
       with:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
-        resourceGroupName: ${{ secrets.AZURE_RG }}
+        resourceGroupName: ${{ github.event.inputs.arm-group }}
         template: ./deploy/main.bicep
         parameters: dbSize=${{ github.event.inputs.db-size }} dbCount=${{ github.event.inputs.db-count }} sqlUser=${{ github.event.inputs.db-user }} sqlPass=${{ github.event.inputs.db-pass }}
         failOnStdErr: false
