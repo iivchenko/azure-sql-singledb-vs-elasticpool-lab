@@ -1,5 +1,22 @@
-on: workflow_dispatch 
-name: Build and Deploy
+on:
+  workflow_dispatch:
+    inputs:
+      db-count:
+        description: 'Number of SQL DBs to deploy'
+        required: true
+        default: 10
+      db-size:
+        description: 'The size of each db in GB'
+        required: false
+        default: 1
+      db-user:
+        description: 'The sql server user'
+        required: true
+        default: 'iivchenko'
+      db-pass: 
+        description: 'The sql server user password'
+        required: true
+        default: $ {{ secrets.SQL_USER_PASS }}
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -14,4 +31,5 @@ jobs:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
         resourceGroupName: ${{ secrets.AZURE_RG }}
         template: ./deploy/main.bicep
+        parameters: dbSize=${{ github.event.inputs.db-size }} dbCount=${{ github.event.inputs.db-count }} sqlUser=${{ github.event.inputs.db-user }} sqlPass=${{ github.event.inputs.db-pass }}
         failOnStdErr: false
